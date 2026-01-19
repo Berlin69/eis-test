@@ -13,18 +13,18 @@ function MeterTableComponent() {
     <div className="relative">
       <div className="w-full overflow-hidden rounded-lg">
         <div className="w-full overflow-x-auto">
-          <div className="min-w-[1408px] w-fit">
+          <div className="min-w-[1406px] w-full">
             <div className="max-h-[896px] overflow-y-auto">
               <div
                 className={`${GRID_TEMPLATE} w-full font-roboto text-[13px] leading-4 bg-[#f0f3f7] border-b min-h-[32px] border-slate-200 py-1 text-sm font-semibold text-slate-700`}
               >
-                <div className="whitespace-nowrap pl-3">№</div>
-                <div className="whitespace-nowrap pl-3">Тип</div>
-                <div className="whitespace-nowrap pl-3">Дата установки</div>
-                <div className="whitespace-nowrap pl-3">Автоматический</div>
-                <div className="whitespace-nowrap pl-3">Текущие показания</div>
-                <div className="whitespace-nowrap pl-3">Адрес</div>
-                <div className="whitespace-nowrap pl-3">Примечание</div>
+                <div className="whitespace-nowrap pl-3 mt-1">№</div>
+                <div className="whitespace-nowrap pl-3 mt-1">Тип</div>
+                <div className="whitespace-nowrap pl-3 mt-1">Дата установки</div>
+                <div className="whitespace-nowrap pl-3 mt-1">Автоматический</div>
+                <div className="whitespace-nowrap pl-3 mt-1">Текущие показания</div>
+                <div className="whitespace-nowrap pl-3 mt-1">Адрес</div>
+                <div className="whitespace-nowrap pl-3 mt-1">Примечание</div>
               </div>
 
               {error && (

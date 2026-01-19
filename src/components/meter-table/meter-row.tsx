@@ -86,7 +86,7 @@ function MeterRowComponent({
             type="button"
             onClick={handleDelete}
             disabled={isDeleting}
-            className={`cursor-pointer flex items-center rounded-md p-3 text-sm font-medium text-red-600 bg-[#FEE3E3] transition-opacity  focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-red-200 ${
+            className={`cursor-pointer flex items-center rounded-md p-3 text-sm font-medium text-red-600 bg-[#FEE3E3] hover:bg-[#FED7D7] transition-opacity  focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-red-200 ${
               isDeleting ? 'cursor-not-allowed opacity-50' : ''
             }`}
             aria-label="Удалить"

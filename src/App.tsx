@@ -1,44 +1,11 @@
-﻿import { useEffect, useMemo } from 'react';
-import { observer } from 'mobx-react-lite';
-import { MeterTable } from './components/MeterTable/meter-table.tsx';
-import { Pagination } from './components/Pagination/pagination.tsx';
+﻿import {useMemo} from "react";
 import {
   createRootStore,
   RootStoreProvider,
-  useRootStore,
 } from './models/root-store.ts';
+import {TableSection} from "./components/table-section/table-section.tsx";
 
-const TableSection = observer(() => {
-  const { metersStore } = useRootStore();
 
-  useEffect(() => {
-    metersStore.loadPage(0);
-  }, [metersStore]);
-
-  const currentPage = Math.floor(metersStore.offset / metersStore.limit) + 1;
-  const totalPages = metersStore.total
-    ? Math.max(1, Math.ceil(metersStore.total / metersStore.limit))
-    : Math.max(
-        currentPage,
-        metersStore.lastLoadedCount === metersStore.limit
-          ? currentPage + 1
-          : currentPage,
-      );
-
-  return (
-    <div className="">
-      <MeterTable />
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onSelectPage={(page) =>
-          metersStore.loadPage((page - 1) * metersStore.limit)
-        }
-        disabled={metersStore.isLoading}
-      />
-    </div>
-  );
-});
 
 function App() {
   const store = useMemo(() => createRootStore(), []);
