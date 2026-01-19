@@ -31,7 +31,7 @@ function MeterRowComponent({
 
     const confirmed = await confirm({
       title: 'Удалить счётчик?',
-      description: 'Вы уверены, что хотите удалить этот счётчик?',
+      description: 'Это действие удалит счётчик безвозвратно',
       confirmText: 'Удалить',
       cancelText: 'Отмена',
     });
@@ -86,7 +86,7 @@ function MeterRowComponent({
             type="button"
             onClick={handleDelete}
             disabled={isDeleting}
-            className={`flex items-center rounded-md p-3 text-sm font-medium text-red-600 bg-red-50 transition-opacity hover:bg-red-50 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-red-200 ${
+            className={`cursor-pointer flex items-center rounded-md p-3 text-sm font-medium text-red-600 bg-[#FEE3E3] transition-opacity  focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-red-200 ${
               isDeleting ? 'cursor-not-allowed opacity-50' : ''
             }`}
             aria-label="Удалить"

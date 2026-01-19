@@ -14,14 +14,14 @@ export function Pagination({
   const pages = buildPages(currentPage, totalPages);
 
   return (
-    <div className="flex items-center justify-end border-t border-slate-200 px-4 py-3">
+    <div className="flex items-center justify-end border-t border-slate-200 min-h-[48px] px-4 py-1">
       <div className="flex gap-2" role="navigation" aria-label="Пагинация">
         {pages.map((page, index) => {
           if (page === 'ellipsis') {
             return (
               <span
                 key={`ellipsis-${index}`}
-                className="min-w-10 rounded-md px-3 py-2 text-sm font-medium text-slate-400"
+                className="min-w-10 bg-white border border-[#CED5DE] text-center rounded-md px-3 py-2 text-sm font-medium text-slate-400"
                 aria-hidden="true"
               >
                 …
@@ -39,10 +39,10 @@ export function Pagination({
               onClick={() => onSelectPage(page)}
               className={`min-w-10 rounded-md px-3 py-2 text-sm font-medium transition ${
                 isActive
-                  ? 'bg-slate-900 text-white'
+                  ? 'bg-[#F2F5F8] text-[#1F2939] border border-[#CED5DE]'
                   : disabled
                     ? 'cursor-not-allowed bg-slate-100 text-slate-400'
-                    : 'bg-white text-slate-700 ring-1 ring-slate-200 hover:bg-slate-50'
+                    : 'bg-white cursor-pointer text-[#1F2939] border border-[#CED5DE] hover:bg-slate-50'
               }`}
             >
               {page}

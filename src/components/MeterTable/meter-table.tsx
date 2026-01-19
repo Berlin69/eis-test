@@ -11,7 +11,7 @@ function MeterTableComponent() {
 
   return (
     <div className="relative">
-      <div className="w-full overflow-hidden rounded-lg border border-[#E0E5EB]">
+      <div className="w-full overflow-hidden rounded-lg">
         <div className="w-full overflow-x-auto">
           <div className="min-w-[1408px] w-fit">
             <div className="max-h-[896px] overflow-y-auto">

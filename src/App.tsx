@@ -26,7 +26,7 @@ const TableSection = observer(() => {
       );
 
   return (
-    <div className="space-y-2">
+    <div className="">
       <MeterTable />
       <Pagination
         currentPage={currentPage}
@@ -51,7 +51,7 @@ function App() {
             <h1 className="text-2xl font-semibold">Список счётчиков</h1>
           </header>
 
-          <div className="rounded-xl border border-slate-200 bg-white shadow-sm">
+          <div className="rounded-xl border border-slate-200 bg-white">
             <TableSection />
           </div>
         </div>

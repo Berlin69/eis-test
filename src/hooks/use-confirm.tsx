@@ -60,7 +60,7 @@ export function useConfirm() {
               <p className="text-sm text-slate-600">{description}</p>
             ) : null}
           </div>
-          <div className="flex justify-end gap-2 border-t border-slate-200 px-5 py-3">
+          <div className="flex justify-end gap-2 px-5 py-3">
             <button
               type="button"
               className="rounded-md px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
