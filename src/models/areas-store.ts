@@ -4,19 +4,28 @@ import { getAreasByIds } from '../api/areas-api.ts';
 
 const AreaModel = types.model('Area', {
   id: types.identifier,
-  city: types.optional(types.string, ''),
-  street: types.optional(types.string, ''),
-  house: types.optional(types.string, ''),
+  address: types.optional(types.string, ''),
   flat: types.optional(types.string, ''),
 });
 
 function toAreaSnapshot(area: AreaDto) {
+  const houseAddress =
+    typeof area.house === 'object' && area.house !== null
+      ? area.house.address ?? ''
+      : '';
+  const fallbackAddress = [area.city, area.street, area.house]
+    .filter((part): part is string => typeof part === 'string' && Boolean(part))
+    .join(', ');
+  const flat =
+    area.flat ??
+    area.str_number_full ??
+    area.str_number ??
+    (area.number !== undefined ? `кв. ${String(area.number)}` : '');
+
   return {
     id: area.id,
-    city: area.city ?? '',
-    street: area.street ?? '',
-    house: area.house ?? '',
-    flat: area.flat ?? '',
+    address: houseAddress || fallbackAddress,
+    flat: flat ?? '',
   };
 }
 
@@ -36,7 +45,7 @@ export const AreasStore = types
         return '-';
       }
 
-      const parts = [area.street, area.house, area.flat].filter(Boolean);
+      const parts = [area.address, area.flat].filter(Boolean);
       return parts.length ? parts.join(', ') : '-';
     },
   }))
@@ -65,7 +74,16 @@ export const AreasStore = types
         .filter((area): area is AreaDto & { id: string } => Boolean(area?.id))
         .filter(
           (area) =>
-            Boolean(area.street) || Boolean(area.house) || Boolean(area.flat),
+            Boolean(area.flat) ||
+            Boolean(area.str_number_full) ||
+            Boolean(area.str_number) ||
+            Boolean(area.number) ||
+            Boolean(area.street) ||
+            Boolean(
+              typeof area.house === 'string'
+                ? area.house
+                : area.house?.address,
+            ),
         );
 
       if (areas.length) {

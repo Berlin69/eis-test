@@ -4,8 +4,16 @@ export interface AreaDto {
   id: string;
   city?: string;
   street?: string;
-  house?: string;
+  house?:
+    | string
+    | {
+        id?: string;
+        address?: string;
+      };
   flat?: string;
+  number?: number | string;
+  str_number?: string;
+  str_number_full?: string;
   [key: string]: unknown;
 }
 
@@ -19,12 +27,13 @@ export async function getAreasByIds(ids: string[]): Promise<AreaDto[]> {
     return [];
   }
 
-  const params = new URLSearchParams({
-    id_in: ids.join(','),
+  const params = new URLSearchParams();
+  ids.forEach((id) => {
+    params.append('id__in', id);
   });
 
   const { data } = await apiClient.get<AreasApiRawResponse | AreaDto[]>(
-    `/areas?${params.toString()}`,
+    `/areas/?${params.toString()}`,
   );
 
   if (Array.isArray(data)) {

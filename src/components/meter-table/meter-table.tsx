@@ -1,4 +1,5 @@
-﻿import { observer } from 'mobx-react-lite';
+import { observer } from 'mobx-react-lite';
+import { useConfirm } from '../../hooks/use-confirm.tsx';
 import { useRootStore } from '../../models/root-store.ts';
 import { MeterRow } from './meter-row.tsx';
 
@@ -8,69 +9,98 @@ export const GRID_TEMPLATE =
 function MeterTableComponent() {
   const { metersStore, areasStore } = useRootStore();
   const { items, offset, isLoading, error } = metersStore;
+  const { confirm, ConfirmDialog } = useConfirm();
+
+  const handleDelete = async (meterId: string) => {
+    if (metersStore.isDeleting(meterId)) {
+      return;
+    }
+
+    const confirmed = await confirm({
+      title: 'Удалить счётчик?',
+      description: 'Это действие удалит счётчик безвозвратно',
+      confirmText: 'Удалить',
+      cancelText: 'Отмена',
+    });
+
+    if (confirmed) {
+      void metersStore.deleteMeter(meterId);
+    }
+  };
 
   return (
-    <div className="relative">
-      <div className="w-full overflow-hidden rounded-lg">
-        <div className="w-full overflow-x-auto">
-          <div className="min-w-[1406px] w-full">
-            <div className="max-h-[896px] overflow-y-auto">
-              <div
-                className={`${GRID_TEMPLATE} w-full font-roboto text-[13px] leading-4 bg-[#f0f3f7] border-b min-h-[32px] border-slate-200 py-1 text-sm font-semibold text-slate-700`}
-              >
-                <div className="whitespace-nowrap pl-3 mt-1">№</div>
-                <div className="whitespace-nowrap pl-3 mt-1">Тип</div>
-                <div className="whitespace-nowrap pl-3 mt-1">Дата установки</div>
-                <div className="whitespace-nowrap pl-3 mt-1">Автоматический</div>
-                <div className="whitespace-nowrap pl-3 mt-1">Текущие показания</div>
-                <div className="whitespace-nowrap pl-3 mt-1">Адрес</div>
-                <div className="whitespace-nowrap pl-3 mt-1">Примечание</div>
-              </div>
-
-              {error && (
-                <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3 text-sm text-red-700">
-                  <span className="pr-4 whitespace-nowrap overflow-hidden text-ellipsis">
-                    {error}
-                  </span>
-                  <button
-                    type="button"
-                    className="rounded-md bg-red-50 px-3 py-1 text-red-700 transition hover:bg-red-100"
-                    onClick={() => metersStore.loadPage(offset)}
-                  >
-                    Повторить
-                  </button>
+    <>
+      <div className="relative">
+        <div className="w-full overflow-hidden rounded-lg">
+          <div className="w-full overflow-x-auto">
+            <div className="min-w-[1406px] w-full">
+              <div className="max-h-[896px] overflow-y-auto">
+                <div
+                  className={`${GRID_TEMPLATE} min-h-[32px] w-full border-b border-slate-200 bg-[#f0f3f7] py-1 font-roboto text-sm font-semibold leading-4 text-slate-700`}
+                >
+                  <div className="mt-1 whitespace-nowrap pl-3">№</div>
+                  <div className="mt-1 whitespace-nowrap pl-3">Тип</div>
+                  <div className="mt-1 whitespace-nowrap pl-3">
+                    Дата установки
+                  </div>
+                  <div className="mt-1 whitespace-nowrap pl-3">
+                    Автоматический
+                  </div>
+                  <div className="mt-1 whitespace-nowrap pl-3">
+                    Текущие показания
+                  </div>
+                  <div className="mt-1 whitespace-nowrap pl-3">Адрес</div>
+                  <div className="mt-1 whitespace-nowrap pl-3">Примечание</div>
                 </div>
-              )}
 
-              {items?.map((meter, index) => (
-                <MeterRow
-                  key={meter.id}
-                  meter={meter}
-                  index={index}
-                  offset={offset}
-                  address={areasStore.getAddress(meter.area_id)}
-                  isDeleting={metersStore.isDeleting(meter.id)}
-                  onDelete={(id) => metersStore.deleteMeter(id)}
-                  gridClass={GRID_TEMPLATE}
-                />
-              ))}
+                {error && (
+                  <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3 text-sm text-red-700">
+                    <span className="overflow-hidden whitespace-nowrap pr-4 text-ellipsis">
+                      {error}
+                    </span>
+                    <button
+                      type="button"
+                      className="rounded-md bg-red-50 px-3 py-1 text-red-700 transition hover:bg-red-100"
+                      onClick={() => metersStore.loadPage(offset)}
+                    >
+                      Повторить
+                    </button>
+                  </div>
+                )}
 
-              {!items.length && !isLoading && !error ? (
-                <div className="px-4 py-6 text-sm text-slate-500">Нет данных</div>
-              ) : null}
+                {items.map((meter, index) => (
+                  <MeterRow
+                    key={meter.id}
+                    meter={meter}
+                    index={index}
+                    offset={offset}
+                    address={areasStore.getAddress(meter.area_id)}
+                    isDeleting={metersStore.isDeleting(meter.id)}
+                    onDelete={handleDelete}
+                    gridClass={GRID_TEMPLATE}
+                  />
+                ))}
+
+                {!items.length && !isLoading && !error ? (
+                  <div className="px-4 py-6 text-sm text-slate-500">
+                    Нет данных
+                  </div>
+                ) : null}
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {isLoading ? (
-        <div className="pointer-events-none absolute inset-x-0 top-12 flex justify-center">
-          <div className="rounded-full bg-white/90 px-4 py-2 text-sm text-slate-700 shadow">
-            Загрузка...
+        {isLoading ? (
+          <div className="pointer-events-none absolute inset-x-0 top-12 flex justify-center">
+            <div className="rounded-full bg-white/90 px-4 py-2 text-sm text-slate-700 shadow">
+              Загрузка...
+            </div>
           </div>
-        </div>
-      ) : null}
-    </div>
+        ) : null}
+      </div>
+      <ConfirmDialog />
+    </>
   );
 }
 

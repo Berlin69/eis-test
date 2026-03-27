@@ -38,7 +38,9 @@ export function RootStoreProvider({
   store: RootStoreInstance;
   children: ReactNode;
 }) {
-  return createElement(RootStoreContext.Provider, { value: store, children });
+  const Provider = RootStoreContext.Provider;
+
+  return createElement(Provider, { value: store }, children);
 }
 
 export function useRootStore(): RootStoreInstance {

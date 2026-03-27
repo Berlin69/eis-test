@@ -25,36 +25,37 @@ export function useConfirm() {
     resolve: null,
   });
 
-  const close = useCallback(
-    (result: boolean) => {
-      if (state.resolve) {
-        state.resolve(result);
-      }
-      setState((prev) => ({ ...prev, open: false, resolve: null }));
-    },
-    [state.resolve],
-  );
+  const close = (result: boolean) => {
+    setState((prev) => {
+      prev.resolve?.(result);
 
-  const confirm = useCallback(
-    (options?: ConfirmOptions) => {
-      const merged = { ...DEFAULT_OPTIONS, ...options };
+      return {
+        ...prev,
+        open: false,
+        resolve: null,
+      };
+    });
+  };
 
-      return new Promise<boolean>((resolve) => {
-        setState({ open: true, options: merged, resolve });
-      });
-    },
-    [],
-  );
+  const confirm = useCallback((options?: ConfirmOptions) => {
+    const merged = { ...DEFAULT_OPTIONS, ...options };
+
+    return new Promise<boolean>((resolve) => {
+      setState({ open: true, options: merged, resolve });
+    });
+  }, []);
 
   const Dialog = () => {
-    if (!state.open) return null;
+    if (!state.open) {
+      return null;
+    }
 
     const { title, description, confirmText, cancelText } = state.options;
 
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
         <div className="w-full max-w-sm rounded-lg bg-white shadow-xl ring-1 ring-slate-200">
-          <div className="px-5 py-4 space-y-2">
+          <div className="space-y-2 px-5 py-4">
             <div className="text-base font-semibold text-slate-900">{title}</div>
             {description ? (
               <p className="text-sm text-slate-600">{description}</p>
