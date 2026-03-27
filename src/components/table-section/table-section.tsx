@@ -1,8 +1,8 @@
-import {observer} from "mobx-react-lite";
-import {useRootStore} from "../../models/root-store.ts";
-import {useEffect} from "react";
-import {MeterTable} from "../meter-table/meter-table.tsx";
-import {Pagination} from "../pagination/pagination.tsx";
+import { useEffect } from 'react';
+import { observer } from 'mobx-react-lite';
+import { useRootStore } from '../../models/root-store.ts';
+import { MeterTable } from '../meter-table/meter-table.tsx';
+import { Pagination } from '../pagination/pagination.tsx';
 
 export const TableSection = observer(() => {
   const { metersStore } = useRootStore();
@@ -15,11 +15,11 @@ export const TableSection = observer(() => {
   const totalPages = metersStore.total
     ? Math.max(1, Math.ceil(metersStore.total / metersStore.limit))
     : Math.max(
-      currentPage,
-      metersStore.lastLoadedCount === metersStore.limit
-        ? currentPage + 1
-        : currentPage,
-    );
+        currentPage,
+        metersStore.lastLoadedCount === metersStore.limit
+          ? currentPage + 1
+          : currentPage,
+      );
 
   return (
     <div>

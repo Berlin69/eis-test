@@ -28,6 +28,14 @@ function toMeterSnapshot(meter: MeterDto) {
 
 type MeterSnapshot = ReturnType<typeof toMeterSnapshot>;
 
+function getLastPageOffset(total: number, limit: number) {
+  if (total <= 0) {
+    return 0;
+  }
+
+  return Math.floor((total - 1) / limit) * limit;
+}
+
 export const MetersStore = types
   .model('MetersStore', {
     items: types.optional(types.array(MeterModel), []),
@@ -85,11 +93,14 @@ export const MetersStore = types
 
       try {
         yield deleteMeter(meterId);
-        yield loadPage(self.offset);
+        const nextTotal =
+          self.total === null ? null : Math.max(0, self.total - 1);
+        const nextOffset =
+          nextTotal === null
+            ? self.offset
+            : Math.min(self.offset, getLastPageOffset(nextTotal, self.limit));
 
-        if (self.lastLoadedCount < self.limit && self.offset > 0) {
-          yield loadPage(self.offset - self.limit);
-        }
+        yield loadPage(nextOffset);
       } catch (error) {
         const message =
           error instanceof Error ? error.message : 'Failed to delete meter';
